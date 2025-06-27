@@ -1,28 +1,30 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  db:
+  postgres:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespass
-      POSTGRES_DB: mydb
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pgdb
     volumes:
-      - db_data:/var/lib/postgresql/data
-    restart: always
-
+      - pgdata:/var/lib/postgresql/data
+    networks: [ backend ]
   pgadmin:
-    image: dpage/pgadmin4:7
-    container_name: pgadmin_ui
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    depends_on: [ postgres ]
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: adminpass
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      SCRIPT_NAME: /pgadmin
     ports:
       - "5050:80"
-    depends_on:
-      - db
-    restart: always
+    networks: [ backend ]
+
+networks:
+  backend:
 
 volumes:
-  db_data:
+  pgdata:

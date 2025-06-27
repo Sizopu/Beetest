@@ -1,18 +1,17 @@
-version: '3.8'
+version: "3.8"
 
 services:
   nginx:
-    build: .
-    image: kiphi/custom-nginx:1.0
-    container_name: nginx_proxy
+    image: nginx:1.25.5
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
       - "5432:5432"
-    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - proxy_net
+      - backend
 
 networks:
-  proxy_net:
-    driver: bridge
+  backend:
